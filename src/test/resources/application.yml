@@ -1,0 +1,10 @@
+redis:
+  cacheNamePrefix: CACHING:CD
+  enableRedisson: true
+  maxActive: 8
+  maxIdle: 8
+  maxWait: -1ms
+  minIdle: 0
+  timeout: 5000ms
+  ttl: 2h
+  uri: redis://localhost:30379/0

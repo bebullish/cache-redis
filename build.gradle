@@ -1,0 +1,107 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.1'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+    id 'maven-publish'
+}
+
+group = 'ce.bebullish'
+version = '1.0.0'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+test {
+    useJUnitPlatform()
+}
+
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter-data-redis"
+
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation 'org.apache.commons:commons-pool2'
+    implementation 'org.redisson:redisson:3.14.1'
+
+    compileOnly "org.springframework.boot:spring-boot-starter"
+    compileOnly "org.springframework.boot:spring-boot-starter-json"
+
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.springframework.boot:spring-boot-starter-data-redis"
+    testImplementation "org.springframework.boot:spring-boot-starter-validation"
+    testImplementation 'org.apache.commons:commons-pool2'
+    testImplementation 'org.redisson:redisson:3.13.4'
+    testImplementation "org.springframework.boot:spring-boot-starter"
+    testImplementation "org.springframework.boot:spring-boot-starter-json"
+    testCompileOnly "org.projectlombok:lombok"
+    testAnnotationProcessor "org.projectlombok:lombok"
+}
+
+publishing {
+    repositories {
+        maven {
+            url = codingArtifactsRepoUrl
+            credentials {
+                username = codingArtifactsGradleUsername
+                password = codingArtifactsGradlePassword
+            }
+            name 'coding'
+        }
+        maven {
+            url = bebullishArtifactsRepoUrl
+            credentials {
+                username = bebullishArtifactsGradleUsername
+                password = bebullishArtifactsGradlePassword
+            }
+            name 'bebullish'
+        }
+    }
+    publications {
+        marlon(MavenPublication) {
+            groupId = "$project.group"
+            artifactId = "$rootProject.name"
+            version = "$project.version"
+
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+
+            pom {
+                name = "$rootProject.name"
+                description = 'auto configuration redis and redisson'
+                url = 'https://github.com/bebullish/cache-redis.git'
+                developers {
+                    developer {
+                        id = 'bebullish'
+                        name = 'bebullish'
+                        email = '15048969966@163.com'
+                    }
+                }
+            }
+        }
+    }
+}
